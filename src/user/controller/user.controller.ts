@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { SignInUserInput } from '../../schemas'
 import {
   createUser,
+  deleteUser,
   findAllUsers,
   findUniqueUserByUsername,
   updateUser,
@@ -72,6 +73,19 @@ export const updateUserHandler = async (
   try {
     const { userId } = req.params
     res.status(StatusCodes.OK).json(await updateUser(userId, req.body))
+  } catch (err: any) {
+    next(err)
+  }
+}
+
+export const deleteUserHandler = async (
+  req: Request<UpdateUserInput['params'], {}, {}>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = req.params
+    res.status(StatusCodes.OK).json(await deleteUser(userId))
   } catch (err: any) {
     next(err)
   }

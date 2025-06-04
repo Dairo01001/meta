@@ -103,3 +103,39 @@ export const findAllUsers = async (select?: Prisma.UserSelect) => {
 
   return users
 }
+
+export const deleteUser = async (id: string) => {
+  const fullUser = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      person: true,
+      profile: true,
+    },
+  })
+
+  if (fullUser?.person) {
+    await prisma.person.delete({
+      where: {
+        id: fullUser.person.id,
+      },
+    })
+  }
+
+  if (fullUser?.profile) {
+    await prisma.profile.delete({
+      where: {
+        id: fullUser.profile.id,
+      },
+    })
+  }
+
+  const user = await prisma.user.delete({
+    where: {
+      id,
+    },
+  })
+
+  return user
+}
